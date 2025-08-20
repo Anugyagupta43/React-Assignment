@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { InputField } from './components/InputField';
+import { DataTable, Column } from './components/DataTable';
 import './App.css';
 
 function App() {
@@ -16,6 +17,19 @@ function App() {
 
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // DataTable sample data
+  const sampleData = [
+    { id: 1, name: 'Ananya', email: 'ananya@example.com', age: 30, status: 'Active', department: 'Engineering' },
+    { id: 2, name: 'Pooja Maheshwar', email: 'pooja@example.com', age: 25, status: 'Active', department: 'Marketing' },
+    { id: 3, name: 'Karan Khatri', email: 'karan123@example.com', age: 35, status: 'Inactive', department: 'Sales' },
+    { id: 4, name: 'Rajesh Kumar', email: 'rajeshk12@example.com', age: 28, status: 'Active', department: 'HR' },
+    { id: 5, name: 'Neelam Singh', email: 'SinghNeelam24@example.com', age: 32, status: 'Active', department: 'Engineering' },
+  ];
+
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: e.target.value }));
@@ -60,11 +74,51 @@ function App() {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
+  // DataTable columns configuration
+  const columns: Column<typeof sampleData[0]>[] = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'name',
+      sortable: true,
+    },
+    {
+      key: 'email',
+      title: 'Email',
+      dataIndex: 'email',
+      sortable: true,
+    },
+    {
+      key: 'age',
+      title: 'Age',
+      dataIndex: 'age',
+      sortable: true,
+      align: 'center',
+    },
+    {
+      key: 'department',
+      title: 'Department',
+      dataIndex: 'department',
+      sortable: true,
+    },
+    {
+      key: 'status',
+      title: 'Status',
+      dataIndex: 'status',
+      sortable: true,
+      render: (value) => (
+        <span className={`status-badge status-badge--${value.toLowerCase()}`}>
+          {value}
+        </span>
+      ),
+    },
+  ];
+
   return (
     <div className={`app ${theme}`}>
       <div className="app-container">
         <header className="app-header">
-          <h1>InputField Component Task 1</h1>
+          <h1>Component Library Demo</h1>
           <button 
             className="theme-toggle"
             onClick={toggleTheme}
@@ -321,6 +375,100 @@ function App() {
                 Submit Form
               </button>
             </form>
+          </section>
+
+          <section className="demo-section">
+            <h2>DataTable Component</h2>
+            
+            <div className="demo-subsection">
+              <h3>Basic DataTable</h3>
+              <DataTable
+                data={sampleData}
+                columns={columns}
+                theme={theme}
+                rowKey="id"
+              />
+            </div>
+
+            <div className="demo-subsection">
+              <h3>DataTable with Row Selection</h3>
+              <DataTable
+                data={sampleData}
+                columns={columns}
+                selectable
+                onRowSelect={setSelectedRows}
+                theme={theme}
+                rowKey="id"
+              />
+              {selectedRows.length > 0 && (
+                <div className="selection-info">
+                  Selected {selectedRows.length} row(s)
+                </div>
+              )}
+            </div>
+
+            <div className="demo-subsection">
+              <h3>DataTable with Pagination</h3>
+              <DataTable
+                data={sampleData}
+                columns={columns}
+                theme={theme}
+                rowKey="id"
+                pagination={{
+                  current: currentPage,
+                  pageSize: pageSize,
+                  total: sampleData.length,
+                  onChange: (page) => setCurrentPage(page),
+                }}
+              />
+            </div>
+
+            <div className="demo-subsection">
+              <h3>DataTable Sizes</h3>
+              <div className="size-demo">
+                <div>
+                  <h4>Small</h4>
+                  <DataTable
+                    data={sampleData.slice(0, 3)}
+                    columns={columns}
+                    size="sm"
+                    theme={theme}
+                    rowKey="id"
+                  />
+                </div>
+                <div>
+                  <h4>Large</h4>
+                  <DataTable
+                    data={sampleData.slice(0, 3)}
+                    columns={columns}
+                    size="lg"
+                    theme={theme}
+                    rowKey="id"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="demo-subsection">
+              <h3>Empty State</h3>
+              <DataTable
+                data={[]}
+                columns={columns}
+                theme={theme}
+                emptyText="No employees found"
+              />
+            </div>
+
+            <div className="demo-subsection">
+              <h3>Loading State</h3>
+              <DataTable
+                data={sampleData}
+                columns={columns}
+                loading
+                theme={theme}
+                loadingText="Loading employees..."
+              />
+            </div>
           </section>
         </main>
       </div>

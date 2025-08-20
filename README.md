@@ -1,9 +1,18 @@
-# InputField Component
+# React Component Library
 
-A flexible and accessible React input component with comprehensive validation states, multiple variants, and theme support.
+A comprehensive React component library featuring flexible and accessible components with comprehensive validation states, multiple variants, and theme support.
+
+## Components
+
+### 1. InputField Component
+A flexible input component with validation states, multiple variants, and theme support.
+
+### 2. DataTable Component
+A powerful data table component with sorting, row selection, pagination, and loading states.
 
 ## Features
 
+### InputField Component
 - ✅ **Text input** with label, placeholder, helper text, error message
 - ✅ **Multiple states**: disabled, invalid, loading
 - ✅ **Three variants**: filled, outlined, ghost
@@ -15,6 +24,20 @@ A flexible and accessible React input component with comprehensive validation st
 - ✅ **TypeScript support**: Full type safety
 - ✅ **Customizable**: Extensive prop options for styling and behavior
 
+### DataTable Component
+- ✅ **Display tabular data** with customizable columns
+- ✅ **Column sorting** with visual indicators
+- ✅ **Row selection** (single/multiple) with select all functionality
+- ✅ **Loading state** with spinner and custom text
+- ✅ **Empty state** with customizable message and icon
+- ✅ **Pagination** with navigation controls
+- ✅ **Custom cell rendering** for complex data display
+- ✅ **Theme support**: light & dark themes
+- ✅ **Three sizes**: small, medium, large
+- ✅ **Responsive design**: mobile-friendly with horizontal scroll
+- ✅ **TypeScript support**: Full type safety with generics
+- ✅ **Accessibility**: Keyboard navigation, ARIA labels, screen reader support
+
 ## Installation
 
 ```bash
@@ -24,7 +47,9 @@ npm start
 
 ## Usage
 
-### Basic Example
+### InputField Component
+
+#### Basic Example
 
 ```tsx
 import { InputField } from './components/InputField';
@@ -44,7 +69,7 @@ function MyForm() {
 }
 ```
 
-### With Validation
+#### With Validation
 
 ```tsx
 <InputField
@@ -58,7 +83,7 @@ function MyForm() {
 />
 ```
 
-### Different Variants
+#### Different Variants
 
 ```tsx
 {/* Outlined (default) */}
@@ -71,7 +96,7 @@ function MyForm() {
 <InputField variant="ghost" label="Ghost Input" />
 ```
 
-### Different Sizes
+#### Different Sizes
 
 ```tsx
 <InputField size="sm" label="Small Input" />
@@ -79,13 +104,135 @@ function MyForm() {
 <InputField size="lg" label="Large Input" />
 ```
 
-### With Theme Support
+#### With Theme Support
 
 ```tsx
 <InputField
   label="Themed Input"
   theme="dark"
   placeholder="Dark theme input"
+/>
+```
+
+### DataTable Component
+
+#### Basic Example
+
+```tsx
+import { DataTable, Column } from './components/DataTable';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+  status: string;
+}
+
+const columns: Column<User>[] = [
+  {
+    key: 'name',
+    title: 'Name',
+    dataIndex: 'name',
+    sortable: true,
+  },
+  {
+    key: 'email',
+    title: 'Email',
+    dataIndex: 'email',
+    sortable: true,
+  },
+  {
+    key: 'age',
+    title: 'Age',
+    dataIndex: 'age',
+    sortable: true,
+    align: 'center',
+  },
+  {
+    key: 'status',
+    title: 'Status',
+    dataIndex: 'status',
+    render: (value) => (
+      <span className={`status-badge status-badge--${value.toLowerCase()}`}>
+        {value}
+      </span>
+    ),
+  },
+];
+
+const data: User[] = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', age: 30, status: 'Active' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', age: 25, status: 'Active' },
+];
+
+function UserTable() {
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      rowKey="id"
+    />
+  );
+}
+```
+
+#### With Row Selection
+
+```tsx
+function UserTableWithSelection() {
+  const [selectedRows, setSelectedRows] = useState<User[]>([]);
+
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      selectable
+      onRowSelect={setSelectedRows}
+      rowKey="id"
+    />
+  );
+}
+```
+
+#### With Pagination
+
+```tsx
+function UserTableWithPagination() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      rowKey="id"
+      pagination={{
+        current: currentPage,
+        pageSize: pageSize,
+        total: data.length,
+        onChange: (page) => setCurrentPage(page),
+      }}
+    />
+  );
+}
+```
+
+#### Different Sizes
+
+```tsx
+<DataTable data={data} columns={columns} size="sm" />
+<DataTable data={data} columns={columns} size="md" />
+<DataTable data={data} columns={columns} size="lg" />
+```
+
+#### With Theme Support
+
+```tsx
+<DataTable
+  data={data}
+  columns={columns}
+  theme="dark"
 />
 ```
 
@@ -119,13 +266,47 @@ function MyForm() {
 | `minLength` | `number` | - | Minimum length |
 | `pattern` | `string` | - | Input pattern |
 
+### DataTableProps<T>
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | `T[]` | - | Array of data objects |
+| `columns` | `Column<T>[]` | - | Column configuration |
+| `loading` | `boolean` | `false` | Show loading state |
+| `selectable` | `boolean` | `false` | Enable row selection |
+| `onRowSelect` | `(selectedRows: T[]) => void` | - | Row selection callback |
+| `className` | `string` | `''` | Additional CSS classes |
+| `theme` | `'light' \| 'dark'` | `'light'` | Theme variant |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Table size |
+| `emptyText` | `string` | `'No data available'` | Empty state message |
+| `loadingText` | `string` | `'Loading...'` | Loading state message |
+| `rowKey` | `keyof T \| ((record: T, index: number) => string)` | - | Unique row identifier |
+| `pagination` | `PaginationConfig` | - | Pagination configuration |
+
+### Column<T>
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `key` | `string` | - | Unique column identifier |
+| `title` | `string` | - | Column header text |
+| `dataIndex` | `keyof T` | - | Data property to display |
+| `sortable` | `boolean` | `false` | Enable column sorting |
+| `width` | `string` | - | Column width |
+| `align` | `'left' \| 'center' \| 'right'` | `'left'` | Text alignment |
+| `render` | `(value: any, record: T, index: number) => React.ReactNode` | - | Custom cell renderer |
+
 ## Component Structure
 
 ```
-InputField/
-├── InputField.tsx      # Main component
-├── InputField.css      # Styles
-└── index.ts           # Exports
+components/
+├── InputField/
+│   ├── InputField.tsx      # Main component
+│   ├── InputField.css      # Styles
+│   └── index.ts           # Exports
+└── DataTable/
+    ├── DataTable.tsx      # Main component
+    ├── DataTable.css      # Styles
+    └── index.ts           # Exports
 ```
 
 ## Styling
