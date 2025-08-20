@@ -118,7 +118,7 @@ function App() {
     <div className={`app ${theme}`}>
       <div className="app-container">
         <header className="app-header">
-          <h1>Component Library Demo</h1>
+          <h1>Components 1 and 2</h1>
           <button 
             className="theme-toggle"
             onClick={toggleTheme}
