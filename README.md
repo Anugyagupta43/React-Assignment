@@ -459,16 +459,9 @@ function LoginForm() {
   );
 }
 ```
+## Preview
+<img width="1917" height="838" alt="image" src="https://github.com/user-attachments/assets/6b450e1e-ab84-4991-b97c-d6f9e2b1243d" />
 
-## Contributing
+<img width="1899" height="780" alt="image" src="https://github.com/user-attachments/assets/44152e9e-39e0-45dc-85b8-5ae824d013ca" />
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
 
-## License
-
-MIT License - see LICENSE file for details.
-"# React-Assignment" 
